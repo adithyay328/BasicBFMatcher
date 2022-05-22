@@ -20,7 +20,7 @@ const int BRESRADIUS = 3;
 const int NUMBEROFINTENSITIES = 11;
 
 // This is the threshold value. Arbitrarily selected
-const int THRESH = 50;
+const int THRESH = 10;
 
 // This class represents a FAST detector with a specific
 // set of config paramaters. The above constants are the defaults
@@ -29,9 +29,9 @@ class FASTDetector {
     // All configurable params are public
     int numIntens, thresh;
 
-    private:
-    int radius;
+    private: int radius;
 
+    public:
     // Default constructor
     FASTDetector();
 

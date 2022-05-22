@@ -14,7 +14,7 @@ int brief_getIntensity(cv::Mat image, int col, int row) {
     }
 };
 
-void initPairs(std::array<SamplingPair, DESC_LEN>& pairs, int patchSize) {
+void initPairs(std::array<SamplingPair, DESC_LEN>* pairs, int patchSize) {
     // Initailizing RNG
     srand (time(0));
 
@@ -33,9 +33,21 @@ void initPairs(std::array<SamplingPair, DESC_LEN>& pairs, int patchSize) {
         samplePair.p1 = pOne;
         samplePair.p2 = pTwo;
 
-        pairs[i] = samplePair;
+        (*pairs)[i] = samplePair;
     }
 };
+
+// Implementing both of our constructors
+BRIEFDescriptor::BRIEFDescriptor(int pSize) {
+    patchSize = pSize;
+    
+    initPairs(&samplingPairs, patchSize);
+}
+
+BRIEFDescriptor::BRIEFDescriptor() {
+    patchSize = PATCH_SIZE;
+    initPairs(&samplingPairs, patchSize);
+}
 
 // Implementing the single point descriptor calculation
 std::bitset<DESC_LEN>* BRIEFDescriptor::calcDescriptor(cv::Mat img, cv::Point point) {
@@ -45,7 +57,6 @@ std::bitset<DESC_LEN>* BRIEFDescriptor::calcDescriptor(cv::Mat img, cv::Point po
 
     // Declaring the result bitset
     std::bitset<DESC_LEN>* resPointer = new std::bitset<DESC_LEN>();
-    std::bitset<DESC_LEN>& res = *resPointer;
 
     // Generating the descriptor bit-by-bit
     for(int i = 0; i < DESC_LEN; i++) {
@@ -61,7 +72,7 @@ std::bitset<DESC_LEN>* BRIEFDescriptor::calcDescriptor(cv::Mat img, cv::Point po
         int intTwo = brief_getIntensity(img_gray, point.x + p2.x, point.y + p2.y);
         
         // Setting the bit value to the test output
-        res[i] = (intOne < intTwo);
+        (*resPointer)[i] = (intOne < intTwo);
     }
 
     return resPointer;
@@ -71,13 +82,13 @@ std::vector<std::bitset<DESC_LEN>>* BRIEFDescriptor::calcDescriptors(cv::Mat img
     // Declaring our result vector
     std::vector<std::bitset<DESC_LEN>>* resPointer = new std::vector<std::bitset<DESC_LEN>>();
     resPointer -> reserve(points -> size());
-    std::vector<std::bitset<DESC_LEN>>& res = *resPointer;
 
     // Iterating over the entire input list and sotring the corresponding
     // descriptor in the result vector
     for(int i = 0; i < points -> size(); i++) {
         std::bitset<DESC_LEN>* desc = this -> calcDescriptor(img, points -> at(i));
-        res[i] = *desc;
+        resPointer -> push_back(*desc);
+        delete desc;
     }
 
     return resPointer;

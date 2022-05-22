@@ -109,18 +109,13 @@ std::vector<cv::Point>* FASTDetector::detect(Mat image) {
   }
 
   // Converting our list into a vector to return
-  std::vector<cv::Point>* resPointer = new std::vector<cv::Point>();
-  resPointer -> reserve(corners.size());
+  std::vector<cv::Point>* res = new std::vector<cv::Point>();
+  res -> reserve(corners.size());
 
-  int i = 0;
-  std::vector<cv::Point>& res = *resPointer;
   for(auto it = corners.begin(); it != corners.end(); it++) {
     // Copying value over to vector
-    res[i] = *it;
-
-    // Incrementing i
-    i++;
+    res -> push_back(*it);
   }
 
-  return resPointer;
+  return res;
 };

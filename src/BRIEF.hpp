@@ -4,16 +4,16 @@
 #include <list>
 
 // Binary descriptors are stored as bitsets
-#include <bits/stdc++.h>
+#include <bitset>
 
 // Descriptor length needs to be known at compile time
-const int DESC_LEN = 256;
+const int DESC_LEN = 2048;
 
 // Patch size of descriptor. Represents the length of one side of the
 // square patch. This / 2 should be the x and y distance
 // between the center and the edges of the patch. This is important
 // since we need to run this 
-const int PATCH_SIZE = 70;
+const int PATCH_SIZE = 30;
 
 // This constant defines what intensity is
 // returned if a point's coordinates are
